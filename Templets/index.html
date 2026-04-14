@@ -521,16 +521,47 @@ function sendMessage() {
     appendMessage('AI', 'Something went wrong. Please try again.', 'ai');
   });
 }
-
 function appendMessage(sender, text, type) {
   var messages = document.getElementById('messages');
   var div = document.createElement('div');
   div.className = 'message ' + type;
-  div.innerHTML = '<div class="avatar">' + (sender === 'You' ? 'U' : 'AI') + '</div><div class="bubble">' + (type === 'ai' ? formatMessage(text) : text) + '</div>';
+
+  var bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  div.innerHTML = '<div class="avatar">' + (sender === 'You' ? 'U' : 'AI') + '</div>';
+  div.appendChild(bubble);
+
   messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+
+  messages.scrollTo({
+    top: messages.scrollHeight,
+    behavior: "smooth"
+  });
+
+  if (type === 'ai') {
+    typeEffect(bubble, formatMessage(text));
+  } else {
+    bubble.innerHTML = text;
+  }
 }
 
+function typeEffect(element, text) {
+  element.innerHTML = "";
+  let i = 0;
+  const speed = 10;
+
+  function typing() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    } else {
+      element.innerHTML = text;
+    }
+  }
+  typing();
+}
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
