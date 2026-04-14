@@ -8,5 +8,55 @@ pinned: false
 license: mit
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
-test trigger
+# ⚡ CodoxaAI
+
+🚀 CodoxaAI is an intelligent AI assistant built to enhance productivity, automate tasks, and provide smart conversational experiences.
+
+---
+
+## ✨ Features
+
+- 🤖 AI-powered chatbot  
+- ⚡ Fast and responsive interface  
+- 🧠 Smart conversation handling  
+- 🔄 Real-time responses  
+- 🌐 Web-based interaction  
+
+---
+
+## 🛠️ Tech Stack
+
+- Python 🐍  
+- HTML / CSS 🎨  
+- JavaScript ⚡  
+- Hugging Face Spaces 🤗  
+
+---
+
+## 📦 Project Structure
+CodoxaAI/
+│── app.py
+│── requirements.txt
+│── static/
+│── templates/
+│── README.md
+
+
+---
+
+## 🚀 How It Works
+
+1. User sends a message  
+2. AI processes input  
+3. Generates intelligent response  
+4. Displays output in UI  
+
+---
+
+## ⚙️ Installation (Local Setup)
+
+```bash
+git clone https://github.com/parag-debnath/CodoxaAI.git
+cd CodoxaAI
+pip install -r requirements.txt
+python app.py
