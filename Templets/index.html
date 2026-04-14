@@ -137,7 +137,41 @@
     .code-header { background: #21262d; padding: 6px 12px; font-size: 12px; color: #8b949e; display: flex; justify-content: space-between; align-items: center; }
     .copy-btn { background: none; border: 1px solid #444; color: #8b949e; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
     code.inline { background: #21262d; padding: 2px 5px; border-radius: 4px; font-size: 12px; color: #e6edf3; }
-
+    /* 👨‍💻 HACKER TERMINAL UI */
+    .terminal-window {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 12px 0;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+    .terminal-header {
+      background: #161b22;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid #30363d;
+    }
+    .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .term-red { background: #ff5f56; }
+    .term-yellow { background: #ffbd2e; }
+    .term-green { background: #27c93f; }
+    .term-title { color: #8b949e; font-size: 11px; margin-left: 8px; font-family: monospace; letter-spacing: 0.5px; }
+    .terminal-body {
+      padding: 14px;
+      color: #39ff14; /* Glowing Hacker Green */
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      text-shadow: 0 0 3px rgba(57, 255, 20, 0.3);
+    }
+    .terminal-error { 
+      color: #ff5f56; /* Red for errors */
+      text-shadow: 0 0 3px rgba(255, 95, 86, 0.3); 
+    }
     @media (max-width: 700px) {
       .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 75%; transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
@@ -430,6 +464,26 @@ function renderChatList() {
 // ── format message ────────────────────────────────────────────
 function formatMessage(text) {
   var f = text;
+
+  // 1. Check for custom terminal blocks FIRST
+  f = f.replace(/```terminal\n?([\s\S]*?)```/g, function(_, code) {
+    var cleanCode = code.trim();
+    var isError = cleanCode.toLowerCase().includes("traceback") || cleanCode.toLowerCase().includes("error") || cleanCode.toLowerCase().includes("exception");
+    var bodyClass = isError ? "terminal-body terminal-error" : "terminal-body";
+    var title = isError ? "sandbox@codox-ai: ~/error" : "sandbox@codox-ai: ~/output";
+    
+    return '<div class="terminal-window">' +
+             '<div class="terminal-header">' +
+               '<div class="term-dot term-red"></div>' +
+               '<div class="term-dot term-yellow"></div>' +
+               '<div class="term-dot term-green"></div>' +
+               '<span class="term-title">' + title + '</span>' +
+             '</div>' +
+             '<div class="' + bodyClass + '">' + cleanCode + '</div>' +
+           '</div>';
+  });
+
+  // 2. Standard Code Blocks
   f = f.replace(/```(\w+)?\n?([\s\S]*?)```/g, function(_, lang, code) {
     var l = lang || 'plaintext';
     var h;
@@ -438,10 +492,14 @@ function formatMessage(text) {
     var id = 'c' + Math.random().toString(36).substr(2, 8);
     return '<div class="code-header"><span>' + l + '</span><button class="copy-btn" onclick="copyCode(\'' + id + '\',event)">Copy</button></div><pre><code id="' + id + '" class="hljs">' + h + '</code></pre>';
   });
+
+  // 3. Inline styling
   f = f.replace(/`([^`]+)`/g, '<code class="inline">$1</code>');
   f = f.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#a78bfa;font-weight:700;">$1</strong>');
   f = f.replace(/\*([^*]+)\*/g, '<em style="color:#93c5fd;">$1</em>');
   f = f.replace(/==([^=]+)==/g, '<mark style="background:#fbbf24;color:#1a1a2e;padding:1px 4px;border-radius:3px;">$1</mark>');
+  
+  // 4. Badges
   f = f.replace(/(^|\n)(⚠️[^\n]+)/g, '$1<span style="background:rgba(251,191,36,0.15);border-left:3px solid #fbbf24;padding:4px 10px;display:block;border-radius:0 6px 6px 0;margin:4px 0;">$2</span>');
   f = f.replace(/(^|\n)(💡[^\n]+)/g, '$1<span style="background:rgba(52,211,153,0.15);border-left:3px solid #34d399;padding:4px 10px;display:block;border-radius:0 6px 6px 0;margin:4px 0;">$2</span>');
   f = f.replace(/(^|\n)(❌[^\n]+)/g, '$1<span style="background:rgba(239,68,68,0.15);border-left:3px solid #ef4444;padding:4px 10px;display:block;border-radius:0 6px 6px 0;margin:4px 0;">$2</span>');
