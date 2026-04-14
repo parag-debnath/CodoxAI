@@ -1,0 +1,22 @@
+{
+  "name": "CodoxAI",
+  "short_name": "CodoxAI",
+  "description": "Your personal coding assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0c29",
+  "theme_color": "#5b5bd6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/fluency/192/bot.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/fluency/512/bot.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
