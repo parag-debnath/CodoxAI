@@ -60,7 +60,7 @@ git clone https://github.com/parag-debnath/CodoxaAI.git
 cd CodoxaAI
 pip install -r requirements.txt
 python app.py
-
+```
 🌍 Live Demo
 
 👉 Running on Hugging Face Spaces
@@ -99,3 +99,4 @@ This project is licensed under the MIT License.
 👉 Make sure:
 ``` id="rm9k2d"
 bot.py → app.py
+```
