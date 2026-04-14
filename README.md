@@ -60,3 +60,42 @@ git clone https://github.com/parag-debnath/CodoxaAI.git
 cd CodoxaAI
 pip install -r requirements.txt
 python app.py
+
+🌍 Live Demo
+
+👉 Running on Hugging Face Spaces
+
+👨‍💻 Author
+
+Parag Debnath
+
+GitHub: https://github.com/parag-debnath
+Hugging Face: https://huggingface.co/Parag07
+⭐ Support
+
+If you like this project:
+
+👉 Give it a ⭐ on GitHub
+👉 Share with others
+
+📜 License
+
+This project is licensed under the MIT License.
+
+
+---
+
+# 🔥 What This Does
+
+✅ Works with :contentReference[oaicite:0]{index=0}  
+✅ Looks professional on :contentReference[oaicite:1]{index=1}  
+✅ Good for portfolio / recruiters  
+✅ Clean structure  
+
+---
+
+# ⚠️ One IMPORTANT Thing
+
+👉 Make sure:
+``` id="rm9k2d"
+bot.py → app.py
