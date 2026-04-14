@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodoxAI — Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: #ececec; }
+    .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 16px; }
+    .logo { text-align: center; margin-bottom: 8px; }
+    .logo h1 { font-size: 28px; color: #fff; }
+    .logo p { font-size: 14px; color: #888; margin-top: 6px; }
+    input { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 12px 16px; color: #ececec; font-size: 15px; outline: none; font-family: inherit; }
+    input { transition: border-color 0.3s, box-shadow 0.3s; }
+input:focus { border-color: #5b5bd6; box-shadow: 0 0 0 3px rgba(91,91,214,0.2); }
+input:hover { border-color: rgba(255,255,255,0.3); }
+    input::placeholder { color: #555; }
+    .btn { background: #5b5bd6; border: none; color: #fff; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.3s, transform 0.2s, box-shadow 0.3s; }
+.btn:hover { background: #4a4ac4; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(91,91,214,0.4); }
+.btn:active { transform: translateY(0); }
+    .divider { display: flex; align-items: center; gap: 12px; }
+    .divider div { flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .divider span { font-size: 12px; color: #666; }
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; border: none; color: #333; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; text-decoration: none; transition: background 0.3s, transform 0.2s, box-shadow 0.3s; }
+.google-btn:hover { background: #f0f0f0; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+.google-btn:active { transform: translateY(0); }
+    .msg { font-size: 13px; text-align: center; color: #ff6b6b; display: none; }
+    .msg.show { display: block; }
+    .switch { text-align: center; font-size: 13px; color: #888; }
+    .switch a { color: #5b5bd6; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <h1>🤖 CodoxAI</h1>
+      <p>Welcome back!</p>
+    </div>
+    <input type="text" id="username" placeholder="Username" onkeydown="handleKey(event)">
+    <input type="password" id="password" placeholder="Password" onkeydown="handleKey(event)">
+    <button class="btn" onclick="login()">Login</button>
+    <p class="msg" id="msg"></p>
+    <div class="divider"><div></div><span>or</span><div></div></div>
+    <a href="/auth/google" class="google-btn">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px;">
+      Continue with Google
+    </a>
+    <p class="switch">Don't have an account? <a href="/signup">Sign up</a></p>
+  </div>
+  <script>
+    async function login() {
+      var username = document.getElementById('username').value.trim();
+      var password = document.getElementById('password').value;
+      var msg = document.getElementById('msg');
+      if (!username || !password) { msg.textContent = 'Please fill in all fields'; msg.classList.add('show'); return; }
+      var res = await fetch('/login', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username, password}) });
+      var data = await res.json();
+      if (data.success) { window.location.href = '/'; }
+      else { msg.textContent = data.message; msg.classList.add('show'); }
+    }
+    function handleKey(e) { if (e.key === 'Enter') login(); }
+    // Handle Google OAuth token from URL fragment
+window.onload = function() {
+  var hash = window.location.hash;
+  if (hash && hash.includes('access_token')) {
+    var params = new URLSearchParams(hash.substring(1));
+    var accessToken = params.get('access_token');
+    if (accessToken) {
+      fetch('/auth/token', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({access_token: accessToken})
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.success) { window.location.href = '/'; }
+      });
+    }
+  }
+};
+  </script>
+</body>
+</html>

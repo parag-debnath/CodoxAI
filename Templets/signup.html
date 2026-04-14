@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodoxAI — Sign Up</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: #ececec; }
+    .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 16px; backdrop-filter: blur(10px); }
+    .logo { text-align: center; margin-bottom: 8px; }
+    .logo h1 { font-size: 28px; color: #fff; }
+    .logo p { font-size: 14px; color: #888; margin-top: 6px; }
+    input { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 12px 16px; color: #ececec; font-size: 15px; outline: none; font-family: inherit; }
+    input:focus { border-color: #5b5bd6; }
+    input::placeholder { color: #555; }
+    .btn { background: #5b5bd6; border: none; color: #fff; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.2s; }
+    .btn:hover { background: #4a4ac4; }
+    .msg { font-size: 13px; text-align: center; display: none; }
+    .msg.error { color: #ff6b6b; }
+    .msg.success { color: #1db954; }
+    .msg.show { display: block; }
+    .switch { text-align: center; font-size: 13px; color: #888; }
+    .switch a { color: #5b5bd6; text-decoration: none; }
+    .switch a:hover { text-decoration: underline; }
+    .rules { font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <h1>🤖 CodoxAI</h1>
+      <p>Create your account</p>
+    </div>
+    <input type="text" id="username" placeholder="Username (min 3 chars)" onkeydown="handleKey(event)">
+    <input type="password" id="password" placeholder="Password (min 6 chars)" onkeydown="handleKey(event)">
+    <input type="password" id="confirm" placeholder="Confirm password" onkeydown="handleKey(event)">
+    <p class="rules">Password must be at least 6 characters</p>
+    <button class="btn" onclick="signup()">Create Account</button>
+    <p class="msg error" id="msg"></p>
+    <div style="display:flex;align-items:center;gap:12px;margin:8px 0;">
+  <div style="flex:1;height:1px;background:rgba(255,255,255,0.1);"></div>
+  <span style="font-size:12px;color:#666;">or</span>
+  <div style="flex:1;height:1px;background:rgba(255,255,255,0.1);"></div>
+</div>
+<a href="/auth/google" style="display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:12px;border-radius:10px;text-decoration:none;font-size:14px;transition:background 0.2s;">
+  <img src="https://www.google.com/favicon.ico" style="width:18px;height:18px;">
+  Continue with Google
+</a>
+<p class="switch">Don't have an account? <a href="/signup">Sign up</a></p>
+  </div>
+  <script>
+    async function signup() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+      const msg = document.getElementById("msg");
+      msg.className = "msg error";
+      if (!username || !password || !confirm) { msg.textContent = "Please fill in all fields"; msg.classList.add("show"); return; }
+      if (password !== confirm) { msg.textContent = "Passwords don't match"; msg.classList.add("show"); return; }
+      const res = await fetch("/signup", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+      });
+      const data = await res.json();
+      if (data.success) { window.location.href = "/"; }
+      else { msg.textContent = data.message; msg.classList.add("show"); }
+    }
+    function handleKey(e) { if (e.key === "Enter") signup(); }
+  </script>
+</body>
+</html>

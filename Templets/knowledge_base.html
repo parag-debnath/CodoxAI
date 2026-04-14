@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Base Upload - CodoxAI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #ececec;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 30px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    p.subtitle {
+      color: #aaa;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #ccc;
+    }
+    input[type="text"], textarea {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 14px;
+      color: #fff;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: #5b5bd6;
+    }
+    textarea {
+      min-height: 300px;
+      resize: vertical;
+    }
+    button {
+      background: #5b5bd6;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    button:hover { background: #4a4ac0; }
+    button:disabled { background: #444; cursor: not-allowed; }
+    #status {
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: center;
+      min-height: 20px;
+    }
+    .success { color: #34d399; }
+    .error { color: #ef4444; }
+    .nav-links { margin-top: 20px; text-align: center; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 14px; margin: 0 10px; }
+    .nav-links a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🧠 CodoxAI Knowledge Base</h1>
+  <p class="subtitle">Upload private documentation, company rules, or API guides. CodoxAI will vectorize the text and use it to answer user questions.</p>
+
+  <div class="input-group">
+    <label>Document Title</label>
+    <input type="text" id="docTitle" placeholder="e.g., Acme Corp Frontend Architecture Guidelines">
+  </div>
+
+  <div class="input-group">
+    <label>Document Content (Text format)</label>
+    <textarea id="docContent" placeholder="Paste the full documentation here... Make sure to use paragraphs (double enter) to separate ideas so the AI chunks it correctly."></textarea>
+  </div>
+
+  <button id="uploadBtn" onclick="uploadDocument()">Vectorize & Upload Document</button>
+  <div id="status"></div>
+
+  <div class="nav-links">
+    <a href="/">&larr; Back to Chat</a>
+    <a href="/analytics">Analytics Dashboard</a>
+  </div>
+</div>
+
+<script>
+  function uploadDocument() {
+    const title = document.getElementById('docTitle').value.trim();
+    const content = document.getElementById('docContent').value.trim();
+    const statusDiv = document.getElementById('status');
+    const btn = document.getElementById('uploadBtn');
+
+    if (!title || !content) {
+      statusDiv.innerHTML = '<span class="error">❌ Title and Content are required.</span>';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "Processing Vectors... (This might take a few seconds)";
+    statusDiv.innerHTML = '';
+
+    fetch('/knowledge_base', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: title, content: content })
+    })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      btn.innerText = "Vectorize & Upload Document";
+      if(data.success) {
+        statusDiv.innerHTML = `<span class="success">✅ ${data.message}</span>`;
+        document.getElementById('docTitle').value = '';
+        document.getElementById('docContent').value = '';
+      } else {
+        statusDiv.innerHTML = `<span class="error">❌ Error: ${data.message}</span>`;
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      btn.innerText = "Vectorize & Upload Document";
+      statusDiv.innerHTML = `<span class="error">❌ Server error occurred.</span>`;
+      console.error(err);
+    });
+  }
+</script>
+
+</body>
+</html>
