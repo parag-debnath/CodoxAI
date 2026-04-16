@@ -99,6 +99,15 @@
     .message { display: flex; gap: 10px; max-width: 760px; width: 100%; margin: 0 auto; animation: popIn 0.25s ease forwards; }
     .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
     .user .avatar { background: #5b5bd6; color: #fff; }
+    .chat-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #4CAF50;
+  box-shadow: 0 0 5px #4CAF50;
+}
     .ai .avatar { background: #1db954; color: #fff; }
    .bubble {
   background: rgba(255,255,255,0.08);
@@ -194,7 +203,7 @@
 
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <h2>&#x1F916; CodoxAI</h2>
+    <h2 style="display: flex; align-items: center;"><img src="/static/codox_logo.png" style="height: 28px; margin-right: 10px;" alt="Logo"> CodoxAI</h2>
     <button class="close-btn" id="closeBtn">&#x2715;</button>
   </div>
   <button class="new-chat-btn" onclick="newChat()">+ New Chat</button>
@@ -596,7 +605,11 @@ function appendMessage(sender, text, type) {
   var bubble = document.createElement('div');
   bubble.className = 'bubble';
 
-  div.innerHTML = '<div class="avatar">' + (sender === 'You' ? 'U' : 'AI') + '</div>';
+ if (sender === 'AI') {
+  div.innerHTML = '<img src="/static/codox_logo.png" class="chat-avatar" alt="AI">';
+} else {
+  div.innerHTML = '<div class="avatar">U</div>';
+}
   div.appendChild(bubble);
 
   messages.appendChild(div);
