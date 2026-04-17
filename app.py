@@ -48,12 +48,16 @@ Your rules:
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-@app.route("/")
-def index():
-    if not session.get("username"):
-        return redirect("/login")
-    return render_template("index.html", username=session["username"])
+@app.route('/')
+def welcome():
+    # This shows the landing page first!
+    return render_template('welcome.html')
 
+# Make sure you still have your chat and login routes below it!
+# For example:
+# @app.route('/login')
+# ... 
+# @app.route('/chat')
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
