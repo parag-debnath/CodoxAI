@@ -28,10 +28,12 @@
       100% { transform: translateY(0px); }
     }
 
-    .hero-logo {
-  width: 120px;
+   .hero-logo {
+  width: 150px; /* <--- This is the exact line that controls the size! */
   height: auto;
-  /* ... other animation stuff ... */
+  margin-bottom: 24px;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px rgba(76, 175, 80, 0.4));
 }
     h1 {
       font-size: 3.5rem;
