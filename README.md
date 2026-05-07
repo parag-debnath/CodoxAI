@@ -31,7 +31,7 @@ license: mit
 - JavaScript ⚡  
 - Hugging Face Spaces 🤗  
 
----
+----
 
 ## 📦 Project Structure
 CodoxaAI/
